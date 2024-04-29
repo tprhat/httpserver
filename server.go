@@ -2,14 +2,35 @@ package main
 
 import (
 	"fmt"
-	"net/http"
+	"log"
+	"net"
 )
 
 func main() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Hello, World!")
-	})
+	ln, err := net.Listen("tcp4", ":8080")
+	if err != nil {
+		log.Fatalf("Error: %v\n", err)
+	}
+	fmt.Printf("Server started: %v", ln)
+	for {
+		conn, err := ln.Accept()
+		if err != nil {
+			log.Fatalf("Error: %v", err)
+		}
+		go HandleClient(conn)
+	}
+}
 
-	http.ListenAndServe(":8080", nil)
+func HandleClient(conn net.Conn) {
 
+	buffer := make([]byte, 1024)
+
+	for {
+		n, err := conn.Read(buffer)
+		if err != nil {
+			log.Fatalf("Error: %v", err)
+			return
+		}
+		fmt.Printf("Data received: %s\n", buffer[:n])
+	}
 }
