@@ -4,11 +4,11 @@ import (
 	"log"
 	"net"
 )
-func main(){
+
+func main() {
 	Client()
 }
-func Client(){
-	
+func Client() {
 
 	conn, err := net.Dial("tcp4", "localhost:8080")
 	if err != nil {
