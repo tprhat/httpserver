@@ -1,8 +1,16 @@
 package main
 
+import (
+	"math/rand"
+	"time"
+)
+
 type card struct {
 	num   int
 	color string
+}
+type hand struct {
+	cards [3]card
 }
 
 func buildDeck() []card {
@@ -14,5 +22,9 @@ func buildDeck() []card {
 			deck = append(deck, card{num: num, color: c})
 		}
 	}
+	// Shuffle the deck
+	rand.Seed(time.Now().UnixNano())
+	rand.Shuffle(len(deck), func(i, j int) { deck[i], deck[j] = deck[j], deck[i] })
+
 	return deck
 }
