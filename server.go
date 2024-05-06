@@ -22,7 +22,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error: %v\n", err)
 	}
-	fmt.Printf("Server started: %v\n", ln)
+	fmt.Printf("Server started: %v\n", ln.Addr().String())
 
 	defer ln.Close()
 	for {
@@ -66,9 +66,11 @@ func HandleClient(conn net.Conn, player *player, counter *int) {
 			return
 		}
 		log.Printf("From: player #%d\tData: %s\n", player.name, buffer[:n])
-		// _, err = conn.Write([]byte("Here is res:"))
-		// if err != nil {
-		// log.Print("Error sending response")
-		// }
+		r := "HTTP/1.1 200 OK\r\nConnection: close\r\nContent-Type: text/html\r\nContent-Length: 19\r\n\r\n<h1>Hola Mundo</h1>"
+
+		_, err = conn.Write([]byte(r))
+		if err != nil {
+			log.Print("Error sending response")
+		}
 	}
 }
